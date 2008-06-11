@@ -1,17 +1,15 @@
 class Wizardry::Step
-  attr_reader :models
+  attr_reader :has, :data
   def initialize(options)
     @options = options
-    @models = {}
-    has options[:has] if options[:has]
+    @has     = {}
+    @data    = {}
+    @has.merge! options[:has] if options[:has]
   end
-
-  private
-  def has(models)
-    add_models(models)
-  end
-
-  def add_models(models)
-    @models.merge!(models)
+  
+  def update(params)
+    params.each do |model, atts|
+      @data[model] = atts.only(has[model])
+    end
   end
 end

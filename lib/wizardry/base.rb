@@ -13,10 +13,9 @@ module Wizardry
     end
 
     def valid?(name)
-      self.class.adapter.valid?(steps[name])
+      steps[name].valid?
     end
 
-  
     class << self
       def adapter; @@adapter end
       def adapter=(adapter); @@adapter = adapter end

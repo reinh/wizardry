@@ -22,13 +22,13 @@ describe Wizardry::Base do
       @params = mock("Params")
     end
 
-    it "#update_name delegates update of a step's parameters to its step" do
+    it "#update_name delegates update of a step's parameters to the step" do
       @name_step.should_receive(:update).with(@params)
       @wizard.update_name(@params)
     end
 
-    it "#valid_name? delegates checking validity of a step to the wizard's adapter" do
-      Wizardry::SpellBooks::ActiveRecordSpellBook.should_receive(:valid?).with(@name_step)
+    it "#valid_name? delegates checking validity of a step to the step" do
+      @name_step.should_receive(:valid?)
       @wizard.valid_name?
     end
   end
