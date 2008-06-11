@@ -38,4 +38,13 @@ describe Wizardry::Step do
       @step.save.should == false
     end
   end
+  
+  describe "#valid?" do
+    it "delegates validation to the adapter" do
+      data = mock("Data")
+      @step.stub!(:data).and_return(data)
+      Wizardry::Base.adapter.should_receive(:valid?).with(data)
+      @step.valid?
+    end
+  end
 end

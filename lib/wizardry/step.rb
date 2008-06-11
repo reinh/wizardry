@@ -14,6 +14,7 @@ class Wizardry::Step
   end
   
   def valid?
+    Wizardry::Base.adapter.valid? data
   end
   
   def save
