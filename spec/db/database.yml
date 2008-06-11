@@ -1,0 +1,2 @@
+sqlite3:
+  :adapter: sqlite3
