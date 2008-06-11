@@ -12,4 +12,11 @@ class Wizardry::Step
       @data[model] = atts.only(has[model])
     end
   end
+  
+  def valid?
+  end
+  
+  def save
+    return false unless valid?
+  end
 end

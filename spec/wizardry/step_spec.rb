@@ -1,6 +1,9 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Wizardry::Step do
+  before do
+    @step = Wizardry::Step.new :has => { :post => [:title, :subject, :author_id] }
+  end
   describe ".new" do
     it "sets its related models from the :has options" do
       step = Wizardry::Step.new(:has => {:model => :attr})
@@ -10,7 +13,6 @@ describe Wizardry::Step do
   
   describe "#update" do
     before do
-      @step = Wizardry::Step.new :has => { :post => [:title, :subject, :author_id] }
       @params = { :post => {
         :title     => "A Title",
         :subject   => "A Subject",
@@ -27,6 +29,13 @@ describe Wizardry::Step do
     it "only stores the parameters specified in the has option in the data hash" do
       @step.update(@params)
       @step.data[:post][:excerpt].should be_nil
+    end
+  end
+  
+  describe "#save" do
+    it "returns false if the step is not valid" do
+      @step.should_receive(:valid?).and_return(false)
+      @step.save.should == false
     end
   end
 end
