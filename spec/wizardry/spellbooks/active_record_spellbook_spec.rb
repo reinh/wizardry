@@ -1,21 +1,30 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
+require 'rubygems'
+require 'activerecord'
+
+class Post < ActiveRecord::Base
+end
+
+class PostWithValidation < Post
+  validates_inclusion_of :title, :in => "A Valid Title"
+end
 
 describe Wizardry::SpellBooks::ActiveRecordSpellBook do
+  before(:each) do
+    @spellbook = Wizardry::SpellBooks::ActiveRecordSpellBook.new
+  end
   describe ".valid?" do
     before(:each) do
-      Post    = mock("Post")
-      @a_post = mock("A Post")
-      @errors = mock("Errors")
-      @data   = { :post => { :title => "A Title", :subject => "A Subject"}}
     end
-    it "checks the validity of each model's attributes from the data" do
-      Post.should_receive(:new).with(@data[:post]).and_return(@a_post)
-      @a_post.should_receive(:valid?)
-      @a_post.should_receive(:errors).at_least(1).times.and_return(@errors)
-      @data[:post].keys.each do |attr|
-        @errors.should_receive(:invalid?).with(attr)
-      end
-      Wizardry::SpellBooks::ActiveRecordSpellBook.valid?(@data)
+    it "returns true if all the models have valid attributes for that step" do
+      data = { :post => { :title => "A Title", :subject => "A Subject"}}
+      @spellbook.data.merge!(data)      
+      @spellbook.should be_valid
+    end
+    it "returns false if there are validation errors for the attributes in the step" do
+      data = { :post_with_validation => { :title => "A Title", :subject => "A Subject"}}
+      @spellbook.data.merge!(data)      
+      @spellbook.should_not be_valid
     end
   end
 end

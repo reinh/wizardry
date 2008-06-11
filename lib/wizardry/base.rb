@@ -1,7 +1,7 @@
 module Wizardry
   class Base
     @steps = {}
-    @@adapter = SpellBooks::ActiveRecordSpellBook
+    @@spellbook = SpellBooks::ActiveRecordSpellBook
 
     def self.step(name, options)
       add_step(name, options)
@@ -17,8 +17,8 @@ module Wizardry
     end
 
     class << self
-      def adapter; @@adapter end
-      def adapter=(adapter); @@adapter = adapter end
+      def spellbook; @@spellbook end
+      def spellbook=(spellbook); @@spellbook = spellbook end
       
       private
       

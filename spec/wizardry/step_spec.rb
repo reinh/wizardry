@@ -34,16 +34,14 @@ describe Wizardry::Step do
   
   describe "#save" do
     it "returns false if the step is not valid" do
-      @step.should_receive(:valid?).and_return(false)
+      @step.spellbook.should_receive(:valid?).and_return(false)
       @step.save.should == false
     end
   end
   
   describe "#valid?" do
-    it "delegates validation to the adapter" do
-      data = mock("Data")
-      @step.stub!(:data).and_return(data)
-      Wizardry::Base.adapter.should_receive(:valid?).with(data)
+    it "delegates validation to the spellbook" do
+      @step.spellbook.should_receive(:valid?)
       @step.valid?
     end
   end

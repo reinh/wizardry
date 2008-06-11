@@ -33,9 +33,9 @@ describe Wizardry::Base do
     end
   end
 
-  describe ".adapter" do
+  describe ".spellbook" do
     it "defaults to ActiveRecordSpellBook" do
-      Wizardry::Base.adapter.should == Wizardry::SpellBooks::ActiveRecordSpellBook
+      Wizardry::Base.spellbook.should == Wizardry::SpellBooks::ActiveRecordSpellBook
     end
   end
 end

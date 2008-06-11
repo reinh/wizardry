@@ -1,23 +1,27 @@
 class Wizardry::Step
-  attr_reader :has, :data
+  attr_reader :has, :spellbook
   def initialize(options)
     @options = options
     @has     = {}
-    @data    = {}
+    @spellbook = Wizardry::Base.spellbook.new
     @has.merge! options[:has] if options[:has]
+  end
+  
+  def data
+    spellbook.data
   end
   
   def update(params)
     params.each do |model, atts|
-      @data[model] = atts.only(has[model])
+      data[model] = atts.only(has[model])
     end
   end
   
   def valid?
-    Wizardry::Base.adapter.valid? data
+    spellbook.valid?
   end
   
   def save
-    return false unless valid?
+    spellbook.save
   end
 end
