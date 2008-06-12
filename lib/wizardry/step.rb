@@ -1,27 +1,55 @@
 class Wizardry::Step
-  attr_reader :has, :spellbook
+  attr_reader :has, :data, :instances, :errors
   def initialize(options)
-    @options = options
-    @has     = {}
-    @spellbook = Wizardry::Base.spellbook.new
-    @has.merge! options[:has] if options[:has]
-  end
-  
-  def data
-    spellbook.data
+    raise ArgumentError, "Must provide a has option" unless options[:has]
+    @options   = options
+    @has       = options[:has]
+    @data      = Wizardry::ModelData.new
+    @instances = {}
+    @errors    = {}
   end
   
   def update(params)
     params.each do |model, atts|
-      data[model] = atts.only(has[model])
+      filtered_atts = atts.only(has[model])
+      data[model] = filtered_atts
     end
   end
   
   def valid?
-    spellbook.valid?
+    clear_errors
+    return false if data.empty?
+    data.each do |model_name, attributes|
+
+      klass = name_to_model(model_name)
+      instances[model_name] = klass.new(attributes)
+
+      # Required to get errors.
+      instances[model_name].valid?
+
+      attributes.keys.any? do |key|
+        if instances[model_name].errors.invalid? key
+          errors[model_name] = instances[model_name].errors
+        end
+      end
+    end
+    errors.empty?
   end
   
   def save
-    spellbook.save
+    return false unless valid?
+    save_each_instance
+  end
+  
+  private
+  def clear_errors
+    @errors = {}
+  end
+  
+  def name_to_model(name)
+    name = name.to_s
+    klass_name = name.respond_to?(:camelcase) ? name.camelcase : name.capitalize
+    return klass_name.constantize if klass_name.respond_to? :constantize
+    Kernel.const_get(klasS_name)
   end
 end

@@ -34,15 +34,11 @@ describe Wizardry::Step do
   
   describe "#save" do
     it "returns false if the step is not valid" do
-      @step.spellbook.should_receive(:valid?).and_return(false)
+      @step.should_receive(:valid?).and_return(false)
       @step.save.should == false
     end
   end
   
   describe "#valid?" do
-    it "delegates validation to the spellbook" do
-      @step.spellbook.should_receive(:valid?)
-      @step.valid?
-    end
   end
 end
